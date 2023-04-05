@@ -1,0 +1,151 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# You will need to run the following code for most of the questions:
+
+subjects = ['Excel', 'Presentations', 'SQL', 'Python', 'Tableau', 'AWS']
+date = ['2023-01-02', '2023-01-16', '2023-01-30', '2023-02-13', '2023-02-27', '2023-03-13']
+difficulty = [7, 5, 9, 10, 8, 8]
+grade = [85, 90, 85, np.nan, np.nan, np.nan]
+
+# For almost all the questions below, all you need is to submit your code, 
+# not any graphs, charts, or output. The exceptions are #1 and #16, which 
+# require written answers.
+
+#1. What is the type of the variable subjects? What is the type of each element in subjects?
+
+#1 ANSWER
+print('the type of the variable subjects is:',(type(subjects)))
+print('the type of each element in subjects:',type(subjects[1]))
+
+# #2. Write code to return a list that will include the first two values in the date list, and 
+# after those two, the last value in the date list.
+# #2 ANSWER
+date[:2], date[-2:]
+
+# #3 ANSWER
+subjects.append("Career Services")
+subjects.remove("Career Services")
+print(subjects)
+
+#4. Write a loop that will go through each element in the subjects list and print out a 
+# lowercase version of each element's first letter. For each line in your code, write a 
+# comment that explains its functionality.
+
+#4 ANSWER
+for i in subjects: #goes through each element in the subjects list
+    print(str.lower(i[:1])) #prints the lowercase version of each element's first letter.
+
+#5. Write a function called grade_feedback that takes one argument, a numerical grade, 
+# and returns an output as follows: if the grade is above 90, output "Excellent", if it 
+# is between 80 and 90, output "Good", and if it is below 80, output "Fair." (It is 
+# advisable to test this function to make sure each of the three outputs works correctly.)
+
+#5 ANSWER
+def grade_feedback(x):
+    if x > 90:
+        print("Excellent")
+    elif x >= 80 and x <= 90:
+        print("Good")
+    else: 
+        print("Fair")
+grade_feedback(90)
+
+#6. Make a dictionary out of the four lists above called subj_info. Each key name can 
+# be identical to the list name. Then convert subj_info into a Pandas DataFrame called subjects.
+
+#6 ANSWER
+subj_info = {
+    "subjects": ['Excel', 'Presentations', 'SQL', 'Python', 'Tableau', 'AWS'],
+"date": ['2023-01-02', '2023-01-16', '2023-01-30', '2023-02-13', '2023-02-27', '2023-03-13'],
+"difficulty": [7, 5, 9, 10, 8, 8],
+"grade": [85, 90, 85, np.nan, np.nan, np.nan]
+}
+
+subj_info = pd.DataFrame(subj_info)
+subj_info
+
+#7. Use a Pandas method to return the first two rows in subjects.
+
+#7 ANSWER
+subj_info.head(2)
+
+#8. Use a Pandas method to return information about subjects. Below that code, in a 
+# commented line, write the number of rows and columns.
+
+#8 ANSWER
+subj_info.info()
+#rows = 6, columns = 4
+
+#9. Run a Pandas method that will give you all the summary statistics about data in every column.
+
+#9 ANSWER
+subj_info.describe()
+
+#10. Create a new column that displays difficulty followed by the text "out of 10". Before you write any 
+# code, think about how you will combine your numeric data with the text data "out of 10".
+
+#10 ANSWER
+subjects['rating']=subjects['difficulty'].astype(str) + ' out of 10'
+subjects
+
+#11. Fill the null values in grade with the average value from the non-null values of grade.
+
+#11 ANSWER
+subj_info = subj_info.fillna(subj_info['grade'].mean())
+subj_info
+
+#12. Create a new column called difficulty_score that maps every value in the difficulty column 
+# to either "Easier" or "Difficult". If the value in difficulty is greater than or equal to 8, 
+# the difficulty_score column should output "Difficult", otherwise "Easier".
+
+#12 ANSWER
+subj_info['difficulty_score'] = subj_info['difficulty'].apply(lambda q: "Difficult" if q >= 8 else "Easier")
+subj_info
+
+#13. Create a new DataFrame called difficult_subjects that only includes the subjects marked 
+# "Difficult" in the new column.
+
+#13 ANSWER
+difficult_subjects_df = subj_info[subj_info['difficulty_score'] == 'Difficult']
+difficult_subjects_df
+
+#14. Sort the new difficult_subjects DataFrame by difficulty descending.
+
+#14 ANSWER
+difficult_subjects_df.sort_values('difficulty', ascending = [False])
+
+#15. Create a matplotlib bar plot that plots subjects and their corresponding grades. 
+# Make the bars yellow, and add a descriptive title and x-axis and y-axis labels.
+
+#15 ANSWER
+plt.bar(x = subj_info["subjects"], height = subj_info["grade"], color = 'yellow')
+plt.title('Grades by Subject')
+plt.xlabel('Subjects')
+plt.ylabel('Grades')
+
+#16. This question requires a new dataset, which you can obtain by running the below code:
+import statsmodels.api as sm
+df = sm.datasets.macrodata.load_pandas()['data']
+# Use seaborn to answer the following questions:
+# a. Create a scatter plot to determine if unemployment and inflation are correlated. 
+# Is there a clear correlation?
+# b. Create a displot for unemployment. 
+# Which percentages seem to be the most common?
+# c. Create a boxplot that shows real interest rate by quarter. 
+# Which quarter had the all-time lowest real interest rate?
+
+#16.a ANSWER
+plt.scatter(df['infl'], df['unemp']) #not correlated
+
+#b
+sns.displot(x = "unemp", data = df) #between 5% & 6%
+
+#c
+sns.boxplot(x = 'quarter', y = "realint", data = df)
+#quarter 2 had the all time lowest real interest rate
+
+
+
